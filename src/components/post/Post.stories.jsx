@@ -18,3 +18,15 @@ PostWithTextOnly.args = {
   userImageUrl: 'https://d-twitter.s3.us-east-2.amazonaws.com/default-profile-pic.jpg',
   username: 'React JS'
 };
+
+export const PostWithTextAndImage = Template.bind({});
+PostWithTextAndImage.args = {
+  ...PostWithTextOnly.args,
+  imageUrl: 'https://d-twitter.s3.us-east-2.amazonaws.com/default-post-pic.jpg'
+};
+
+export const PostWithImageOnly = Template.bind({});
+PostWithImageOnly.args = {
+  ...PostWithTextAndImage.args,
+  text: ''
+};

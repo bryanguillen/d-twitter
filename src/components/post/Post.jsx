@@ -21,9 +21,9 @@ export default function Post({
         <div className="post-profile-image" style={{ backgroundImage: `url("${userImageUrl}")` }}></div>
         <div className="post-username-and-content-container">
           <div className="post-username">{username}</div>
-          <div className="post-content-container">
+          <div className="post-text-and-image-container">
             {text ? <div className="post-text">{text}</div> : null}
-            {imageUrl ? <div className="post-image"><img alt="post image" className="post-image" src={imageUrl}/></div> : null}
+            {imageUrl ? <div className="post-image" style={{ backgroundImage: `url("${imageUrl}")` }}></div> : null}
           </div>
         </div>
       </div>
