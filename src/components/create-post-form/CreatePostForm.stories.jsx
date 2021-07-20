@@ -22,12 +22,7 @@ const Template = (args) => {
   );
 };
 
-export const NoError = Template.bind({});
-NoError.args = {
+export const CreatePostFormStory = Template.bind({});
+CreatePostFormStory.args = {
   error: false
-};
-
-export const Error = Template.bind({});
-Error.args = {
-  error: true
 };
