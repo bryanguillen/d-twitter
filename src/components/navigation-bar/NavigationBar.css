@@ -1,0 +1,16 @@
+.navigation-bar {
+  background-color: #282828;
+  box-sizing: border-box;
+  color: white;
+  padding: 10px;
+}
+
+.navigation-bar-home-button {
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 768px) {
+  .navigation-bar {
+    text-align: right;
+  } 
+}
