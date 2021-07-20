@@ -1,0 +1,84 @@
+.create-post-form {
+  background-color: #282828;
+  color: white;
+  height: 100%;
+  padding: 10px;
+  width: 100%;
+}
+
+.create-post-form-button-attachment {
+  background-color: transparent;
+  border: 1px solid #1DA1F2;
+  color: #1DA1F2;
+  height: 100%;
+  width: 100%;
+}
+
+.create-post-form-button-submit {
+  background-color: #1DA1F2;
+  color: white;
+  cursor: pointer;
+}
+
+.create-post-form-buttons-container {
+  display: flex;
+}
+
+.create-post-form-control {
+  background-color: transparent;
+  color: white;
+  height: 150px;
+  padding: 10px;
+  resize: none;
+  width: 100%;
+}
+
+.create-post-form-error {
+  color: red;
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
+.create-post-form-file-input {
+  cursor: pointer;
+  height: 100%;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 99;
+}
+
+.create-post-form-file-input-container {
+  margin-right: 5px;
+  position: relative;
+}
+
+.create-post-form-first-row {
+  margin-bottom: 10px;
+}
+
+.create-post-form-label {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.create-post-form-second-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.create-post-form,
+.create-post-form * {
+  box-sizing: border-box;
+}
+
+.create-post-form-button-submit,
+.create-post-form-file-input-container {
+  border: 0;
+  height: 25px;
+  width: 75px;
+}
