@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { IconContext } from 'react-icons';
 import { IoHeartOutline, IoHeartSharp } from 'react-icons/io5'
-
+import ProfileImage from '../profile-image/ProfileImage';
 import './Post.css';
 
 /**
@@ -18,7 +18,9 @@ export default function Post({
   return (
     <div className="post">
       <div className="post-content-container">
-        <div className="post-profile-image" style={{ backgroundImage: `url("${userImageUrl}")` }}></div>
+        <div className="post-profile-image-container">
+          <ProfileImage url={userImageUrl}/>
+        </div>
         <div className="post-username-and-content-container">
           <div className="post-username">{username}</div>
           <div className="post-text-and-image-container">

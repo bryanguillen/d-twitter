@@ -27,13 +27,8 @@
   display: flex;
 }
 
-.post-profile-image {
-  background-position: center center;
-  background-size: cover;
-  border-radius: 50%;
-  height: 50px;
-  margin-right: 10px;
-  width: 50px;
+.post-profile-image-container {
+  flex-shrink: 0;
 }
 
 .post-username {
