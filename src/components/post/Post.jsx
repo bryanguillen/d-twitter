@@ -18,9 +18,7 @@ export default function Post({
   return (
     <div className="post">
       <div className="post-content-container">
-        <div className="post-profile-image-container">
-          <img alt="post profile image" className="post-profile-image" src={userImageUrl}/>
-        </div>
+        <div className="post-profile-image" style={{ backgroundImage: `url("${userImageUrl}")` }}></div>
         <div className="post-username-and-content-container">
           <div className="post-username">{username}</div>
           <div className="post-content-container">

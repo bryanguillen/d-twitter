@@ -20,12 +20,10 @@
 }
 
 .post-profile-image {
-  max-height: 100%;
-  max-width: 100%;
-}
-
-.post-profile-image-container {
+  background-position: center center;
+  background-size: cover;
   height: 75px;
+  margin-right: 5px;
   width: 75px;
 }
 
