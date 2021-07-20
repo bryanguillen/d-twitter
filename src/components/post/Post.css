@@ -1,0 +1,40 @@
+.post {
+  background-color: #282828;
+  color: white;
+  padding: 10px;
+}
+
+.post-content-container {
+  display: flex;
+}
+
+.post-like-button {
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.post-like-button-container {
+  align-items: center;
+  display: flex;
+}
+
+.post-profile-image-container {
+  height: 150px;
+  width: 150px;
+}
+
+.post-username {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.post-username-and-content-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.post,
+.post * {
+  box-sizing: border-box;
+}
