@@ -22,9 +22,10 @@
 .post-profile-image {
   background-position: center center;
   background-size: cover;
-  height: 75px;
+  border-radius: 50%;
+  height: 50px;
   margin-right: 5px;
-  width: 75px;
+  width: 50px;
 }
 
 .post-username {
