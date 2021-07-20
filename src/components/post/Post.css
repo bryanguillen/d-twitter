@@ -6,6 +6,7 @@
 
 .post-content-container {
   display: flex;
+  margin-bottom: 20px;
 }
 
 .post-like-button {
@@ -18,9 +19,14 @@
   display: flex;
 }
 
+.post-profile-image {
+  max-height: 100%;
+  max-width: 100%;
+}
+
 .post-profile-image-container {
-  height: 150px;
-  width: 150px;
+  height: 75px;
+  width: 75px;
 }
 
 .post-username {
