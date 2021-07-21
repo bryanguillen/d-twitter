@@ -59,6 +59,12 @@ contract("DecentralizedTwitter", accounts => {
       assert.equal(post.postId, POST_ID);
       assert.equal(post.userId, USER_ID);
     });
+
+    it("should handle case where post does not exist", async () => {
+      const post = await decentralizedTwitter.getPost(10, { from: firstAccount });
+      assert.equal(post.postId, -1);
+      assert.equal(post.userId, 0);
+    });
   });
 
   describe("createPost", () => {
