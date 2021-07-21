@@ -7,10 +7,19 @@ contract DecentralizedTwitter {
 
   string public name = "DecentralizedTwitter";
   mapping (address => User) users;
+  Post[] posts;
 
   /******************************
    * Structs
    ******************************/
+
+  /**
+   * @description struct representing a post
+   */
+  struct Post {
+    uint postId;
+    uint userId;
+  }
 
   /**
    * @description struct representing a user;
