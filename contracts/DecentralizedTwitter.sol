@@ -1,5 +1,9 @@
 pragma solidity >=0.4.22 <0.6.0;
 
+/**
+ * TODO Handle case where post id already exists for creating post
+ * TODO Handle case where user id already exists for creating user
+ */
 contract DecentralizedTwitter {
   /******************************
    * State
@@ -17,7 +21,7 @@ contract DecentralizedTwitter {
    * @description struct representing a post
    */
   struct Post {
-    uint postId;
+    int postId;
     uint userId;
   }
 
@@ -36,19 +40,13 @@ contract DecentralizedTwitter {
    * Methods
    ******************************/
 
-  /**
-   * @TODO Handle case where postId already exists
-   */
-  function createPost(uint postId, uint userId) public {
+  function createPost(int postId, uint userId) public {
     address sender = msg.sender;
     require(users[sender].exists && users[sender].userId == userId);
     Post memory newPost = Post(postId, userId);
     posts.push(newPost);
   }
 
-  /**
-   * @TODO Handle case where userId already exists
-   */
   function createUser(uint userId) public {
     address sender = msg.sender;
     require(users[sender].exists == false);
@@ -56,8 +54,8 @@ contract DecentralizedTwitter {
     users[sender] = newUser;
   }
 
-  function getPost(uint idForPostBeingSearched) public view returns (uint postId, uint userId) {
-    Post memory post;
+  function getPost(int idForPostBeingSearched) public view returns (int postId, uint userId) {
+    Post memory post = Post(-1, 0); // default
 
     for (uint i = 0; i < posts.length; i++) {
       if (posts[i].postId == idForPostBeingSearched) {
