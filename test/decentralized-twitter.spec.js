@@ -1,28 +1,6 @@
 const DecentralizedTwitter = artifacts.require("./DecentralizedTwitter.sol");
 
 contract("DecentralizedTwitter", accounts => {
-  describe("getUser", () => {
-    let decentralizedTwitter;
-    
-    before(async () => {
-      decentralizedTwitter = await DecentralizedTwitter.deployed();
-      await decentralizedTwitter.createUser(0);
-    });
-    
-    it("should get user if user exists", async () => {
-      const user = await decentralizedTwitter.getUser();
-      assert.equal(user.username, accounts[0]);
-      assert.equal(user.userId, 0);
-    });
-    
-    it("should get user if user exists", async () => {
-      const secondAccount = accounts[1];
-      const user = await decentralizedTwitter.getUser({ from: secondAccount });
-      const userFound = accounts.find(account => account === user.username) !== undefined;
-      assert.notOk(userFound);
-    });
-  });
-
   describe("createUser", () => {
     let decentralizedTwitter;
     
@@ -47,6 +25,28 @@ contract("DecentralizedTwitter", accounts => {
       } catch (error) {
         assert.ok(error);
       }
+    });
+  });
+  
+  describe("getUser", () => {
+    let decentralizedTwitter;
+    
+    before(async () => {
+      decentralizedTwitter = await DecentralizedTwitter.deployed();
+      await decentralizedTwitter.createUser(0);
+    });
+    
+    it("should get user if user exists", async () => {
+      const user = await decentralizedTwitter.getUser();
+      assert.equal(user.username, accounts[0]);
+      assert.equal(user.userId, 0);
+    });
+    
+    it("should get user if user exists", async () => {
+      const secondAccount = accounts[1];
+      const user = await decentralizedTwitter.getUser({ from: secondAccount });
+      const userFound = accounts.find(account => account === user.username) !== undefined;
+      assert.notOk(userFound);
     });
   });
 });
