@@ -14,13 +14,6 @@ contract("DecentralizedTwitter", accounts => {
       assert.equal(user.username, accounts[0]);
       assert.equal(user.userId, 0);
     });
-    
-    it("should get user if user exists", async () => {
-      const secondAccount = accounts[1];
-      const user = await decentralizedTwitter.getUser({ from: secondAccount });
-      const userFound = accounts.find(account => account === user.username) !== undefined;
-      assert.notOk(userFound);
-    });
   });
 
   describe("createUser", () => {
@@ -47,6 +40,42 @@ contract("DecentralizedTwitter", accounts => {
       } catch (error) {
         assert.ok(error);
       }
+    });
+  });
+
+  describe("getPost", () => {
+    const USER_ID = 0;
+    const POST_ID = 0;
+    const firstAccount = accounts[0];
+    let decentralizedTwitter;
+    
+    before(async () => {
+      decentralizedTwitter = await DecentralizedTwitter.deployed();
+      await decentralizedTwitter.createPost(POST_ID, USER_ID, { from: firstAccount });
+    });
+
+    it("should get post", async () => {
+      const post = await decentralizedTwitter.getPost(POST_ID, { from: firstAccount });
+      assert.equal(post.postId, POST_ID);
+      assert.equal(post.userId, USER_ID);
+    });
+  });
+
+  describe("createPost", () => {
+    let decentralizedTwitter;
+    
+    before(async () => {
+      decentralizedTwitter = await DecentralizedTwitter.deployed();
+    });
+
+    it("should create post if user and postId exists", async () => {
+      const firstAccount = accounts[0];
+      const USER_ID = 0;
+      const POST_ID = 1;
+      await decentralizedTwitter.createPost(POST_ID, USER_ID, { from: firstAccount });
+      const post = await decentralizedTwitter.getPost(POST_ID);
+      assert.equal(post.userId, USER_ID);
+      assert.equal(post.postId, POST_ID);
     });
   });
 });
