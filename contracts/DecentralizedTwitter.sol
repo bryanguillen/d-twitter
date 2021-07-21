@@ -36,6 +36,9 @@ contract DecentralizedTwitter {
    * Methods
    ******************************/
 
+  /**
+   * @TODO Handle case where postId already exists
+   */
   function createPost(uint postId, uint userId) public {
     address sender = msg.sender;
     require(users[sender].exists && users[sender].userId == userId);
@@ -43,6 +46,9 @@ contract DecentralizedTwitter {
     posts.push(newPost);
   }
 
+  /**
+   * @TODO Handle case where userId already exists
+   */
   function createUser(uint userId) public {
     address sender = msg.sender;
     require(users[sender].exists == false);
