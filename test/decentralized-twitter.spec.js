@@ -115,6 +115,31 @@ describe("DecentralizedTwitter", () => {
       assert.deepEqual(userIds, Array.from(5, () => 0));
     });
   });
+
+  contract("getRecentPostsForUser", (accounts) => {
+    let decentralizedTwitter;
+    
+    before(async () => {
+      decentralizedTwitter = await DecentralizedTwitter.deployed();
+      await decentralizedTwitter.createUser(0);
+      await decentralizedTwitter.createUser(1, { from: accounts[1] });
+      await createPosts(decentralizedTwitter, 5, 0);
+      // create for user 1
+      await decentralizedTwitter.createPost(5, 1, { from: accounts[1] });
+      await decentralizedTwitter.createPost(6, 1, { from: accounts[1] });
+      // user 0
+      await decentralizedTwitter.createPost(7, 0);
+      // user 1
+      await decentralizedTwitter.createPost(8, 1, { from: accounts[1] });
+    });
+    
+    it("should get the newest posts for user", async () => {
+      const results = await decentralizedTwitter.getRecentPostsForUser(-1, 1);
+      const postIds = results.map(postId => parseInt(postId.toString()));
+      assert.equal(postIds.length, 3);
+      assert.deepEqual(postIds, [8, 6, 5]);
+    });
+  });
 });
 
 /**
