@@ -92,7 +92,7 @@ describe("DecentralizedTwitter", () => {
     before(async () => {
       decentralizedTwitter = await DecentralizedTwitter.deployed();
       await decentralizedTwitter.createUser(0);
-      await createTwentyFivePosts(decentralizedTwitter);
+      await createPosts(decentralizedTwitter, 25, 0);
     });
     
     it("should get the newest ten posts if no posts seen previously", async () => {
@@ -125,11 +125,9 @@ describe("DecentralizedTwitter", () => {
  * @param {Object} decentralizedTwitterInstance
  * @returns {}
  */
-async function createTwentyFivePosts(decentralizedTwitterInstance) {
-  const USER_ID = 0; // use this for simplicity
-
-  for (let i = 0; i < 25; i++) {
+async function createTwentyFivePosts(decentralizedTwitterInstance, numberOfPosts, userId) {
+  for (let i = 0; i < numberOfPosts; i++) {
     const postId = i;
-    await decentralizedTwitterInstance.createPost(postId, USER_ID);
+    await decentralizedTwitterInstance.createPost(postId, userId);
   }
 }
