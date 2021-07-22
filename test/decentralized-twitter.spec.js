@@ -109,28 +109,27 @@ describe("DecentralizedTwitter", () => {
       const results = await decentralizedTwitter.getRecentPosts(5);
       const postIds = results.postIds.map(postId => parseInt(postId.toString()));
       const userIds = results.userIds.map(userId => parseInt(userId.toString()));
-      console.log(postIds);
-      // assert.equal(postIds.length, 5);
-      // assert.equal(userIds.length, 5);
-      // assert.deepEqual(postIds, [4, 3, 2, 1, 0]);
-      // assert.deepEqual(userIds, Array.from(5, () => 0));
+      assert.equal(postIds.length, 5);
+      assert.equal(userIds.length, 5);
+      assert.deepEqual(postIds, [4, 3, 2, 1, 0]);
+      assert.deepEqual(userIds, Array.from(5, () => 0));
     });
-
-    /**
-     * @description Helper function for encapsulating the code needed to create
-     * 25 posts; 25 is an arbitrary number chosen, this plus the 2 created in previous
-     * tests equals 27, which will allow less than ten use case to be tested.  Note:
-     * The user id 0 is used purposely
-     * @param {Object} decentralizedTwitterInstance
-     * @returns {}
-     */
-    async function createTwentyFivePosts(decentralizedTwitterInstance) {
-      const USER_ID = 0; // use this for simplicity
-
-      for (let i = 0; i < 25; i++) {
-        const postId = i;
-        await decentralizedTwitterInstance.createPost(postId, USER_ID);
-      }
-    }
   });
 });
+
+/**
+ * @description Helper function for encapsulating the code needed to create
+ * 25 posts; 25 is an arbitrary number chosen, this plus the 2 created in previous
+ * tests equals 27, which will allow less than ten use case to be tested.  Note:
+ * The user id 0 is used purposely
+ * @param {Object} decentralizedTwitterInstance
+ * @returns {}
+ */
+async function createTwentyFivePosts(decentralizedTwitterInstance) {
+  const USER_ID = 0; // use this for simplicity
+
+  for (let i = 0; i < 25; i++) {
+    const postId = i;
+    await decentralizedTwitterInstance.createPost(postId, USER_ID);
+  }
+}
