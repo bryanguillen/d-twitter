@@ -85,4 +85,52 @@ describe("DecentralizedTwitter", () => {
       assert.equal(post.postId, POST_ID);
     });
   });
+
+  contract("getRecentPosts", (accounts) => {
+    let decentralizedTwitter;
+    
+    before(async () => {
+      decentralizedTwitter = await DecentralizedTwitter.deployed();
+      await decentralizedTwitter.createUser(0);
+      await createTwentyFivePosts(decentralizedTwitter);
+    });
+    
+    it("should get the newest ten posts if no posts seen previously", async () => {
+      const results = await decentralizedTwitter.getRecentPosts(-1);
+      const postIds = results.postIds.map(postId => parseInt(postId.toString()));
+      const userIds = results.userIds.map(userId => parseInt(userId.toString()));
+      assert.equal(postIds.length, 10);
+      assert.equal(userIds.length, 10);
+      assert.deepEqual(postIds, [24, 23, 22, 21, 20, 19, 18, 17, 16, 15]);
+      assert.deepEqual(userIds, Array.from({ length: 10 }, () => 0));
+    });
+
+    it("should be able to handle use case where less than 10 and not starting from beginning", async () => {
+      const results = await decentralizedTwitter.getRecentPosts(5);
+      const postIds = results.postIds.map(postId => parseInt(postId.toString()));
+      const userIds = results.userIds.map(userId => parseInt(userId.toString()));
+      console.log(postIds);
+      // assert.equal(postIds.length, 5);
+      // assert.equal(userIds.length, 5);
+      // assert.deepEqual(postIds, [4, 3, 2, 1, 0]);
+      // assert.deepEqual(userIds, Array.from(5, () => 0));
+    });
+
+    /**
+     * @description Helper function for encapsulating the code needed to create
+     * 25 posts; 25 is an arbitrary number chosen, this plus the 2 created in previous
+     * tests equals 27, which will allow less than ten use case to be tested.  Note:
+     * The user id 0 is used purposely
+     * @param {Object} decentralizedTwitterInstance
+     * @returns {}
+     */
+    async function createTwentyFivePosts(decentralizedTwitterInstance) {
+      const USER_ID = 0; // use this for simplicity
+
+      for (let i = 0; i < 25; i++) {
+        const postId = i;
+        await decentralizedTwitterInstance.createPost(postId, USER_ID);
+      }
+    }
+  });
 });
