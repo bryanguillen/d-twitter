@@ -1,7 +1,7 @@
 const DecentralizedTwitter = artifacts.require("./DecentralizedTwitter.sol");
 
-contract("DecentralizedTwitter", accounts => {
-  describe("getUser", () => {
+describe("DecentralizedTwitter", () => {
+  contract("getUser", (accounts) => {
     let decentralizedTwitter;
     
     before(async () => {
@@ -16,34 +16,34 @@ contract("DecentralizedTwitter", accounts => {
     });
   });
 
-  describe("createUser", () => {
+  contract("createUser", (accounts) => {
     let decentralizedTwitter;
     
     beforeEach(async () => {
       decentralizedTwitter = await DecentralizedTwitter.deployed();
     });
     
-    it("should add user to users if all id is valid and user has not been added yet", async () => {
-      const secondAccount = accounts[1];
-      const USER_ID = 1;
-      await decentralizedTwitter.createUser(USER_ID, { from: secondAccount });
-      const user = await decentralizedTwitter.getUser({ from: secondAccount });
-      assert.equal(user.username, accounts[1]);
+    it("should add user to users if id is valid and user has not been added yet", async () => {
+      const firstAccount = accounts[0];
+      const USER_ID = 0;
+      await decentralizedTwitter.createUser(USER_ID, { from: firstAccount });
+      const user = await decentralizedTwitter.getUser({ from: firstAccount });
+      assert.equal(user.username, firstAccount);
       assert.equal(user.userId, USER_ID);
     });
     
     it("should not add user to users user is already added", async () => {
-      const secondAccount = accounts[1];
-      const USER_ID = 1;
+      const firstAccount = accounts[0];
+      const USER_ID = 0;
       try {
-        await decentralizedTwitter.createUser(USER_ID, { from: secondAccount });
+        await decentralizedTwitter.createUser(USER_ID, { from: firstAccount });
       } catch (error) {
         assert.ok(error);
       }
     });
   });
 
-  describe("getPost", () => {
+  contract("getPost", (accounts) => {
     const USER_ID = 0;
     const POST_ID = 0;
     const firstAccount = accounts[0];
@@ -51,6 +51,7 @@ contract("DecentralizedTwitter", accounts => {
     
     before(async () => {
       decentralizedTwitter = await DecentralizedTwitter.deployed();
+      await decentralizedTwitter.createUser(USER_ID, { from: firstAccount });
       await decentralizedTwitter.createPost(POST_ID, USER_ID, { from: firstAccount });
     });
 
@@ -67,18 +68,18 @@ contract("DecentralizedTwitter", accounts => {
     });
   });
 
-  describe("createPost", () => {
+  contract("createPost", (accounts) => {
+    const USER_ID = 0;
     let decentralizedTwitter;
     
     before(async () => {
       decentralizedTwitter = await DecentralizedTwitter.deployed();
+      await decentralizedTwitter.createUser(USER_ID);
     });
 
     it("should create post if user and postId exists", async () => {
-      const firstAccount = accounts[0];
-      const USER_ID = 0;
       const POST_ID = 1;
-      await decentralizedTwitter.createPost(POST_ID, USER_ID, { from: firstAccount });
+      await decentralizedTwitter.createPost(POST_ID, USER_ID);
       const post = await decentralizedTwitter.getPost(POST_ID);
       assert.equal(post.userId, USER_ID);
       assert.equal(post.postId, POST_ID);
