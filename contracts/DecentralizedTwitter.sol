@@ -79,6 +79,25 @@ contract DecentralizedTwitter {
     return (postIds, userIds);
   }
 
+  function getRecentPostsForUser(int idForLastPostSeen, uint userId) public view returns (int[] memory postIds) {
+    uint index = findIndexForPost(idForLastPostSeen);
+    uint numberOfPosts = getNumberOfPostsForUser(index, userId); // used to get the length for the memory arrays =(
+
+    uint counter = 0; // 0 based for index purposes
+    postIds = new int[](numberOfPosts);
+
+    while (counter < 10) {
+      if (posts[index].userId == userId) {
+        postIds[counter] = posts[index].postId;
+        counter = counter + 1;
+      }
+      index = index - 1;
+      if (index == 0) {
+        break;
+      }
+    }
+  }
+
   function getPost(int idForPostBeingSearched) public view returns (int postId, uint userId) {
     Post memory post = Post(-1, 0); // default
 
@@ -119,6 +138,22 @@ contract DecentralizedTwitter {
 
     while (numberOfPosts < 10) {
       numberOfPosts = numberOfPosts + 1;
+      i = i - 1;
+      if (i == 0) {
+        break;
+      }
+    }
+  }
+
+  function getNumberOfPostsForUser(uint indexForPost, uint userId) private view returns (uint numberOfPosts) {
+    numberOfPosts = 0;
+
+    uint i = indexForPost;
+
+    while (numberOfPosts < 10) {
+      if (posts[i].userId == userId) {
+        numberOfPosts = numberOfPosts + 1;
+      }
       i = i - 1;
       if (i == 0) {
         break;
