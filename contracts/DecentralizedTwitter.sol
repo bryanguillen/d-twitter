@@ -58,10 +58,14 @@ contract DecentralizedTwitter {
     uint index = findIndexForPost(idForLastPostSeen);
     uint numberOfPosts = getNumberOfPosts(index); // used to get the length for the memory arrays =(
 
-    uint counter = 0;
+    uint counter = 0; // 0 based for index purposes
     postIds = new int[](numberOfPosts);
     userIds = new uint[](numberOfPosts);
 
+    /**
+     * Run loop until the number of posts gotten is 10 or
+     * until we reach the "genisis" post
+     */
     while (counter < 10) {
       postIds[counter] = posts[index].postId;
       userIds[counter] = posts[index].userId;
