@@ -123,9 +123,11 @@ describe("DecentralizedTwitter", () => {
  * tests equals 27, which will allow less than ten use case to be tested.  Note:
  * The user id 0 is used purposely
  * @param {Object} decentralizedTwitterInstance
+ * @param {Object} numberOfPosts
+ * @param {Object} userId
  * @returns {}
  */
-async function createTwentyFivePosts(decentralizedTwitterInstance, numberOfPosts, userId) {
+async function createPosts(decentralizedTwitterInstance, numberOfPosts, userId) {
   for (let i = 0; i < numberOfPosts; i++) {
     const postId = i;
     await decentralizedTwitterInstance.createPost(postId, userId);
