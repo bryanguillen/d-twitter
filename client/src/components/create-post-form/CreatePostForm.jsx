@@ -48,7 +48,7 @@ CreatePostForm.propTypes = {
   /**
    * File
    */
-  onChangeFileInput: PropTypes.object,
+  onChangeFileInput: PropTypes.func,
   /**
    * change handler for text input
    */
