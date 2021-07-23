@@ -55,49 +55,11 @@ contract DecentralizedTwitter {
   }
 
   function getRecentPosts(int idForLastPostSeen) public view returns (int[] memory postIds, uint[] memory userIds) {
-    uint index = findIndexForPost(idForLastPostSeen);
-    uint numberOfPosts = getNumberOfPosts(index); // used to get the length for the memory arrays =(
-
-    uint counter = 0; // 0 based for index purposes
-    postIds = new int[](numberOfPosts);
-    userIds = new uint[](numberOfPosts);
-
-    /**
-     * Run loop until the number of posts gotten is 10 or
-     * until we reach the "genisis" post
-     */
-    while (counter < 10) {
-      postIds[counter] = posts[index].postId;
-      userIds[counter] = posts[index].userId;
-      counter = counter + 1;
-      index = index - 1;
-      if (index == 0) {
-        postIds[counter] = posts[index].postId; // HACK
-        userIds[counter] = posts[index].userId; // HACK
-        break;
-      }
-    }
-
-    return (postIds, userIds);
+    (postIds, userIds) = getPostsForFeed(idForLastPostSeen, true, 0);
   }
 
-  function getRecentPostsForUser(int idForLastPostSeen, uint userId) public view returns (int[] memory postIds) {
-    uint index = findIndexForPost(idForLastPostSeen);
-    uint numberOfPosts = getNumberOfPostsForUser(index, userId); // used to get the length for the memory arrays =(
-
-    uint counter = 0; // 0 based for index purposes
-    postIds = new int[](numberOfPosts);
-
-    while (counter < 10) {
-      if (posts[index].userId == userId) {
-        postIds[counter] = posts[index].postId;
-        counter = counter + 1;
-      }
-      index = index - 1;
-      if (index == 0) {
-        break;
-      }
-    }
+  function getRecentPostsForUser(int idForLastPostSeen, uint userId) public view returns (int[] memory postIds, uint[] memory userIds) {
+    (postIds, userIds) = getPostsForFeed(idForLastPostSeen, false, userId);
   }
 
   function getPost(int idForPostBeingSearched) public view returns (int postId, uint userId) {
@@ -134,33 +96,54 @@ contract DecentralizedTwitter {
     }
   }
 
-  function getNumberOfPosts(uint indexForPost) private pure returns (uint numberOfPosts) {
+  function getNumberOfPostsForUser(uint indexForPost, bool feedIsHome, uint userId) private view returns (uint numberOfPosts) {
     numberOfPosts = 0;
     uint i = indexForPost;
 
     while (numberOfPosts < 10) {
-      numberOfPosts = numberOfPosts + 1;
-      i = i - 1;
-      if (i == 0) {
-        numberOfPosts = numberOfPosts + 1; // hack!
-        break;
-      }
-    }
-  }
-
-  function getNumberOfPostsForUser(uint indexForPost, uint userId) private view returns (uint numberOfPosts) {
-    numberOfPosts = 0;
-
-    uint i = indexForPost;
-
-    while (numberOfPosts < 10) {
-      if (posts[i].userId == userId) {
+      if (feedIsHome == true || posts[i].userId == userId) {
         numberOfPosts = numberOfPosts + 1;
       }
       i = i - 1;
       if (i == 0) {
+        if (feedIsHome == true || posts[i].userId == userId) {
+          numberOfPosts = numberOfPosts + 1;
+        }
         break;
       }
     }
+  } 
+
+  function getPostsForFeed(int idForLastPostSeen, bool feedIsHome, uint userId) private view returns (int[] memory postIds, uint[] memory userIds) {
+    uint index = findIndexForPost(idForLastPostSeen);
+    uint numberOfPosts = getNumberOfPostsForUser(index, feedIsHome, userId); // used to get the length for the memory arrays =(
+
+    uint counter = 0; // 0 based for index purposes
+    postIds = new int[](numberOfPosts);
+    userIds = new uint[](numberOfPosts);
+
+    /**
+     * Run loop until the number of posts gotten is 10 or
+     * until we reach the "genisis" post
+     */
+    while (counter < 10) {
+      if (feedIsHome == true || posts[index].userId == userId) {
+        postIds[counter] = posts[index].postId;
+        userIds[counter] = posts[index].userId;
+        counter = counter + 1;
+      }
+      index = index - 1;
+      if (index == 0) {
+        postIds[counter] = posts[index].postId; // HACK
+        userIds[counter] = posts[index].userId; // HACK
+        break;
+      }
+      // hack for the specific user use case
+      if (counter == numberOfPosts) {
+        break;
+      }
+    }
+
+    return (postIds, userIds);
   }
 }
