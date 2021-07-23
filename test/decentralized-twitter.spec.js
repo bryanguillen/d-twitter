@@ -112,7 +112,7 @@ describe("DecentralizedTwitter", () => {
       assert.equal(postIds.length, 5);
       assert.equal(userIds.length, 5);
       assert.deepEqual(postIds, [4, 3, 2, 1, 0]);
-      assert.deepEqual(userIds, Array.from(5, () => 0));
+      assert.deepEqual(userIds, [0, 0, 0, 0, 0]);
     });
   });
 
@@ -154,7 +154,6 @@ describe("DecentralizedTwitter", () => {
  */
 async function createPosts(decentralizedTwitterInstance, numberOfPosts, userId) {
   for (let i = 0; i < numberOfPosts; i++) {
-    const postId = i;
-    await decentralizedTwitterInstance.createPost(postId, userId);
+    await decentralizedTwitterInstance.createPost(i, userId);
   }
 }
