@@ -135,7 +135,7 @@ describe("DecentralizedTwitter", () => {
     
     it("should get the newest posts for user", async () => {
       const results = await decentralizedTwitter.getRecentPostsForUser(-1, 1);
-      const postIds = results.map(postId => parseInt(postId.toString()));
+      const postIds = results.postIds.map(postId => parseInt(postId.toString()));
       assert.equal(postIds.length, 3);
       assert.deepEqual(postIds, [8, 6, 5]);
     });
