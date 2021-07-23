@@ -72,6 +72,8 @@ contract DecentralizedTwitter {
       counter = counter + 1;
       index = index - 1;
       if (index == 0) {
+        postIds[counter] = posts[index].postId; // HACK
+        userIds[counter] = posts[index].userId; // HACK
         break;
       }
     }
@@ -140,6 +142,7 @@ contract DecentralizedTwitter {
       numberOfPosts = numberOfPosts + 1;
       i = i - 1;
       if (i == 0) {
+        numberOfPosts = numberOfPosts + 1; // hack!
         break;
       }
     }
