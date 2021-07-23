@@ -1,6 +1,23 @@
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
+import Home from './pages/home/Home';
+
+import './App.css';
+
 function App() {
   return (
-    <div className="app">Hello world!</div>
+    <Router>
+      <div className="app">
+        <Switch>
+          <Route path="/">
+            <Home/>
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
