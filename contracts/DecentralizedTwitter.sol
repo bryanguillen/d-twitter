@@ -115,6 +115,9 @@ contract DecentralizedTwitter {
   } 
 
   function getPostsForFeed(int idForLastPostSeen, bool feedIsHome, uint userId) private view returns (int[] memory postIds, uint[] memory userIds) {
+    // only run this if there are posts; hack for when there are no posts in the db
+    require(posts.length > 0);
+    
     uint index = findIndexForPost(idForLastPostSeen);
     uint numberOfPosts = getNumberOfPostsForUser(index, feedIsHome, userId); // used to get the length for the memory arrays =(
 
