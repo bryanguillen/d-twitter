@@ -1,5 +1,9 @@
 import Web3 from "web3";
 
+/**
+ * @description Script provided by the react truffle box to get web3 object
+ * @returns {Object}
+ */
 const getWeb3 = () =>
   new Promise((resolve, reject) => {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
