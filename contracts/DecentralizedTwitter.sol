@@ -37,6 +37,16 @@ contract DecentralizedTwitter {
   }
 
   /******************************
+   * Events
+   ******************************/
+
+  event UserCreated(
+    uint userId,
+    address username,
+    bool exists
+  );
+
+  /******************************
    * Methods
    ******************************/
 
@@ -52,6 +62,7 @@ contract DecentralizedTwitter {
     require(users[sender].exists == false);
     User memory newUser = User(userId, sender, true);
     users[sender] = newUser;
+    emit UserCreated(userId, sender, true);
   }
 
   function getRecentPosts(int idForLastPostSeen) public view returns (int[] memory postIds, uint[] memory userIds) {
