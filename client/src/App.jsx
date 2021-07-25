@@ -10,7 +10,7 @@ import getWeb3 from './utils/get-web-3';
 import './App.css';
 
 function App() {
-  const [account, setAccount] = useState('');
+  const [accountData, setAccountData] = useState({ loginAttempted: false, address: '' });
   const [web3, setWeb3] = useState(null);
 
   /**
@@ -28,8 +28,8 @@ function App() {
   useEffect(() => {
     (async function() {
       if (web3) {
-        const [web3Account] = await web3.eth.getAccounts();
-        setAccount(web3Account); // perhaps there is an easier way of identifying account or not
+        const [address] = await web3.eth.getAccounts();
+        setAccountData({ loginAttempted: true, address }); // perhaps there is an easier way of identifying account or not
       }
     })();
   }, [web3]);
@@ -38,7 +38,7 @@ function App() {
     <Router>
       <div className="app">
         {
-          web3 ?
+          accountData.loginAttempted ?
             <Switch>
               <Route path="/">
                 <Home/>
