@@ -23,7 +23,7 @@ function App() {
   }, []);
 
   /**
-   * @description Used to set connection error value
+   * @description Used to set account data
    */
   useEffect(() => {
     (async function() {
