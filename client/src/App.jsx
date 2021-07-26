@@ -4,14 +4,14 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
-import { initializeOrbitDb } from './utils/orbit-db-utils';
 import getWeb3 from './utils/get-web-3';
 import Home from './pages/home/Home';
+import initializeAppStores from './utils/initialize-app-stores';
 import Loading from './pages/loading/Loading';
 import './App.css';
 
 function App() {
-  const [userDb, setUserDb] = useState(null);
+  const [stores, setStores] = useState({ user: null, post: null, initialized: false });
   const [web3, setWeb3] = useState(null);
 
   /**
@@ -20,7 +20,9 @@ function App() {
   useEffect(() => {
     (async function() {
       try {
-        setUserDb(await initializeOrbitDb());
+        const { post, user } = await initializeAppStores('http://localhost:5002');
+        setStores({ post, user, initialized: true });
+
         setWeb3(await getWeb3());
       } catch (error) {
         console.log(error);
@@ -32,7 +34,7 @@ function App() {
     <Router>
       <div className="app">
         {
-          userDb && web3 ?
+          web3 && stores.initialized ?
             <Switch>
               <Route path="/">
                 <Home/>
