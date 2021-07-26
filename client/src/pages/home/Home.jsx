@@ -41,15 +41,16 @@ export default function Home({
 
       // account
       const { id, address } = account;
+      const parsedId = parseInt(id);
   
       // get new id
       const postId = await getIdForNewPost();
   
       // create post
-      await post.put({ _id: postId, value: value, userId: id });
+      await post.put({ _id: postId, value: value, userId: parsedId });
 
       // add new post to blockchain
-      await decentralizedTwitterContract.methods.createPost(postId, id).send({ from: address });
+      await decentralizedTwitterContract.methods.createPost(postId, parsedId).send({ from: address });
     
       // reset postForm
       setPostForm({ value: '', file: null, error: false });
