@@ -53,11 +53,12 @@ function App() {
   useEffect(() => {
     (async function() {
       if (account && decentralizedTwitterContract && stores.initialized && !userExistsInSystem) {
-        const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call();
+        const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call({ from: account });
         if (userOnBlockchain.exists) {
           // fetch the initial posts;
         } else {
           const userId = await getNewUserId();
+          setupUserCreatedListener();
           await stores.post.put({ _id: userId, username: account });
           await decentralizedTwitterContract.methods.createUser(userId).send({ from: account });
         }
@@ -83,6 +84,14 @@ function App() {
     const { post } = stores;
     const posts = await post.get('');
     return posts.length > 0 ? posts[posts.length - 1]._id + 1 : 1;
+  }
+
+  /**
+   * @description Function used to setup user created event
+   * @returns {undefined}
+   */
+  function setupUserCreatedListener() {
+    decentralizedTwitterContract.events.UserCreated({}, () => console.log('user created!'));
   }
 
   return (
