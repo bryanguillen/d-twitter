@@ -8,13 +8,11 @@ export default {
 };
 
 const Template = (args) => {
-  const [file, setFile] = useState(null);
   const [value, setValue] = useState('');
 
   return (
     <CreatePostForm
       error={args.error}
-      onChangeFileInput={event => event.target.files.length === 1 ? setFile(event.target.files[0]) : undefined}
       onChangeTextInput={event => setValue(event.target.value)}
       onSubmit={event => event.preventDefault()}
       value={value}

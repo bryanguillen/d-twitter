@@ -9,14 +9,6 @@
   margin-bottom: 20px;
 }
 
-.post-image {
-  background-size: cover;
-  background-position: center;
-  height: 250px;
-  margin: 10px auto 0 auto;
-  width: 250px;
-}
-
 .post-like-button {
   cursor: pointer;
   margin-right: 5px;

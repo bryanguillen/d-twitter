@@ -7,7 +7,6 @@ import './CreatePostForm.css';
 export default function CreatePostForm({
   error,
   value,
-  onChangeFileInput,
   onChangeTextInput,
   onSubmit
 }) {
@@ -27,16 +26,6 @@ export default function CreatePostForm({
       <div className="create-post-form-second-row">
         <div className="create-post-form-characters-left">{value.length} / 140</div>
         <div className="create-post-form-buttons-container">
-          <div className="create-post-form-file-input-container">
-            <input
-              accept="image/*"
-              className="create-post-form-file-input"
-              multiple={false}
-              onChange={onChangeFileInput}
-              type="file"
-            />
-            <button className="create-post-form-button-attachment">Browse</button>
-          </div>
           <button className="create-post-form-button-submit" type="submit">Submit</button>
         </div>
       </div>
