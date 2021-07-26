@@ -8,7 +8,6 @@ import './Post.css';
  * UI Component for post
  */
 export default function Post({
-  imageUrl,
   numLikes,
   postLiked,
   text,
@@ -25,7 +24,6 @@ export default function Post({
           <div className="post-username">{username}</div>
           <div className="post-text-and-image-container">
             {text ? <div className="post-text">{text}</div> : null}
-            {imageUrl ? <div className="post-image" style={{ backgroundImage: `url("${imageUrl}")` }}></div> : null}
           </div>
         </div>
       </div>
