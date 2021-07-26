@@ -13,7 +13,7 @@ import NavigationBar from './components/navigation-bar/NavigationBar';
 import './App.css';
 
 function App() {
-  const [account, setAccount] = useState('');
+  const [account, setAccount] = useState({ address: '', id: -1 });
   const [decentralizedTwitterContract, setDecentralizedTwitterContract] = useState(null);
   const [stores, setStores] = useState({ user: null, post: null, initialized: false });
   const [userExistsInSystem, setUserExistsInSystem] = useState(false);
@@ -39,7 +39,7 @@ function App() {
 
         const [account] = await web3.eth.getAccounts();
         if (account) {
-          setAccount(account);
+          setAccount(previousState => ({ ...previousState, address: account }));
         }
       } catch (error) {
         console.log(error);
@@ -52,15 +52,16 @@ function App() {
    */
   useEffect(() => {
     (async function() {
-      if (account && decentralizedTwitterContract && stores.initialized && !userExistsInSystem) {
-        const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call({ from: account });
+      if (account.address && decentralizedTwitterContract && stores.initialized && !userExistsInSystem) {
+        const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call({ from: account.address });
         if (userOnBlockchain.exists) {
-          // fetch the initial posts;
+          setAccount(previousState => ({...previousState, id: userOnBlockchain.userId}));
         } else {
           const userId = await getNewUserId();
           setupUserCreatedListener();
-          await stores.post.put({ _id: userId, username: account });
-          await decentralizedTwitterContract.methods.createUser(userId).send({ from: account });
+          await stores.user.put({ _id: userId, username: account });
+          await decentralizedTwitterContract.methods.createUser(userId).send({ from: account.address });
+          setAccount(previousState => ({...previousState, id: userId}))
         }
       }
     })();
@@ -73,7 +74,7 @@ function App() {
   async function connect() {
     await window.ethereum.send('eth_requestAccounts');
     const [account] = await web3.eth.getAccounts();
-    setAccount(account);
+    setAccount(previousState => ({...previousState, address: account}));
   }
 
   /**
@@ -81,9 +82,9 @@ function App() {
    * @returns {Object}
    */
   async function getNewUserId() {
-    const { post } = stores;
-    const posts = await post.get('');
-    return posts.length > 0 ? posts[posts.length - 1]._id + 1 : 1;
+    const { user } = stores;
+    const users = await user.get('');
+    return users.length > 0 ? users[users.length - 1]._id + 1 : 1;
   }
 
   /**
@@ -100,13 +101,17 @@ function App() {
         <NavigationBar
           handleClickOnConnect={connect}
           handleClickOnHome={undefined}
-          loggedIn={account}
+          loggedIn={account.address}
         />
         {
-          web3 && stores.initialized ?
+          web3 && stores.initialized && decentralizedTwitterContract ?
             <Switch>
               <Route path="/">
-                <Home/>
+                <Home
+                  account={account}
+                  decentralizedTwitterContract={decentralizedTwitterContract}
+                  stores={stores}
+                />
               </Route>
             </Switch> :
             <Loading/>
