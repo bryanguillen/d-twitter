@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { IconContext } from 'react-icons';
-import { IoHeartOutline, IoHeartSharp } from 'react-icons/io5'
+import { IoHeartOutline, IoHeartSharp } from 'react-icons/io5';
+import { useHistory } from 'react-router-dom';
 import ProfileImage from '../profile-image/ProfileImage';
 import './Post.css';
 
@@ -11,9 +12,12 @@ export default function Post({
   numLikes,
   postLiked,
   text,
+  userId,
   userImageUrl,
   username,
 }) {
+  const history = useHistory(); // this should be moved to parent
+
   return (
     <div className="post">
       <div className="post-content-container">
@@ -21,7 +25,7 @@ export default function Post({
           <ProfileImage url={userImageUrl}/>
         </div>
         <div className="post-username-and-content-container">
-          <div className="post-username">{username}</div>
+          <div className="post-username" onClick={() => history.push(`/profile/${userId}`)}>{username}</div>
           <div className="post-text-and-image-container">
             {text ? <div className="post-text">{text}</div> : null}
           </div>
