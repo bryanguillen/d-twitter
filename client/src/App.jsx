@@ -9,9 +9,11 @@ import getWeb3 from './utils/get-web-3';
 import Home from './pages/home/Home';
 import initializeAppStores from './utils/initialize-app-stores';
 import Loading from './pages/loading/Loading';
+import NavigationBar from './components/navigation-bar/NavigationBar';
 import './App.css';
 
 function App() {
+  const [account, setAccount] = useState('');
   const [decentralizedTwitterContract, setDecentralizedTwitterContract] = useState(null);
   const [stores, setStores] = useState({ user: null, post: null, initialized: false });
   const [web3, setWeb3] = useState(null);
@@ -39,9 +41,24 @@ function App() {
     })();
   }, []);
 
+  /**
+   * @description Abstraction for connecting user to application
+   * @returns {undefined}
+   */
+  async function connect() {
+    await window.ethereum.send('eth_requestAccounts');
+    const [account] = await web3.eth.getAccounts();
+    setAccount(account);
+  }
+
   return (
     <Router>
       <div className="app">
+        <NavigationBar
+          handleClickOnConnect={connect}
+          handleClickOnHome={undefined}
+          loggedIn={account}
+        />
         {
           web3 && stores.initialized ?
             <Switch>
