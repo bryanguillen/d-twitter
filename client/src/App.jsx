@@ -91,7 +91,7 @@ function App() {
    * @returns {undefined}
    */
   function setupUserCreatedListener() {
-    decentralizedTwitterContract.events.UserCreated({}, () => console.log('user created!'));
+    decentralizedTwitterContract.events.UserCreated({}, () => setUserExistsInSystem(true));
   }
 
   return (
