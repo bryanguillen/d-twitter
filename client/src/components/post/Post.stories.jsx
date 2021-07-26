@@ -15,5 +15,6 @@ PostWithTextOnly.args = {
   postLiked: false,
   text: 'Post with text only',
   userImageUrl: 'https://d-twitter.s3.us-east-2.amazonaws.com/default-profile-pic.jpg',
-  username: 'React JS'
+  username: 'React JS',
+  userId: 1
 };
