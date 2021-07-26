@@ -7,7 +7,7 @@ export default function Home({
   stores,
   decentralizedTwitterContract
 }) {
-  const [postForm, setPostForm] = useState({ file: null, value: '', error: false });
+  const [postForm, setPostForm] = useState({ value: '', error: false });
 
   useEffect(() => {
     setupNewPostListener();
