@@ -16,6 +16,7 @@ function App() {
   const [account, setAccount] = useState('');
   const [decentralizedTwitterContract, setDecentralizedTwitterContract] = useState(null);
   const [stores, setStores] = useState({ user: null, post: null, initialized: false });
+  const [userExistsInSystem, setUserExistsInSystem] = useState(false);
   const [web3, setWeb3] = useState(null);
 
   /**
@@ -47,6 +48,24 @@ function App() {
   }, []);
 
   /**
+   * @description Function used to create an account, if none exists
+   */
+  useEffect(() => {
+    (async function() {
+      if (account && decentralizedTwitterContract && stores.initialized && !userExistsInSystem) {
+        const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call();
+        if (userOnBlockchain.exists) {
+          // fetch the initial posts;
+        } else {
+          const userId = await getNewUserId();
+          await stores.post.put({ _id: userId, username: account });
+          await decentralizedTwitterContract.methods.createUser(userId).send({ from: account });
+        }
+      }
+    })();
+  }, [account, decentralizedTwitterContract, userExistsInSystem, stores]);
+
+  /**
    * @description Abstraction for connecting user to application
    * @returns {undefined}
    */
@@ -54,6 +73,16 @@ function App() {
     await window.ethereum.send('eth_requestAccounts');
     const [account] = await web3.eth.getAccounts();
     setAccount(account);
+  }
+
+  /**
+   * @description Function used to get a new user id
+   * @returns {Object}
+   */
+  async function getNewUserId() {
+    const { post } = stores;
+    const posts = await post.get('');
+    return posts.length > 0 ? posts[posts.length - 1]._id + 1 : 1;
   }
 
   return (
