@@ -37,9 +37,9 @@ function App() {
         const dTwitter = new web3.eth.Contract(DecentralizedTwitter.abi, networkData.address)
         setDecentralizedTwitterContract(dTwitter);
 
-        const [account] = await web3.eth.getAccounts();
-        if (account) {
-          setAccount(previousState => ({ ...previousState, address: account }));
+        const [address] = await web3.eth.getAccounts();
+        if (address) {
+          setAccount(previousState => ({ ...previousState, address }));
         }
       } catch (error) {
         console.log(error);
@@ -73,8 +73,8 @@ function App() {
    */
   async function connect() {
     await window.ethereum.send('eth_requestAccounts');
-    const [account] = await web3.eth.getAccounts();
-    setAccount(previousState => ({...previousState, address: account}));
+    const [address] = await web3.eth.getAccounts();
+    setAccount(previousState => ({...previousState, address}));
   }
 
   /**
