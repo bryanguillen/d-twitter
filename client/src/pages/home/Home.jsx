@@ -99,11 +99,13 @@ export default function Home({
         null
       }
       {
-        feed.map(post => (
+        feed.map((post, index) => (
           <Post
+            id={index}
             numLikes={0}
             postLiked={false}
             text={post.value}
+            userId={post.userId}
             userImageUrl={'https://d-twitter.s3.us-east-2.amazonaws.com/default-profile-pic.jpg'}
             username={post.username}
           />
