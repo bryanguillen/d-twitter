@@ -101,7 +101,7 @@ export default function Home({
       {
         feed.map((post, index) => (
           <Post
-            id={index}
+            key={index}
             numLikes={0}
             postLiked={false}
             text={post.value}
