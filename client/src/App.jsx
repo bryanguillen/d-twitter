@@ -35,6 +35,11 @@ function App() {
         const networkData = DecentralizedTwitter.networks[networkId];
         const dTwitter = new web3.eth.Contract(DecentralizedTwitter.abi, networkData.address)
         setDecentralizedTwitterContract(dTwitter);
+
+        const [account] = await web3.eth.getAccounts();
+        if (account) {
+          setAccount(account);
+        }
       } catch (error) {
         console.log(error);
       }
