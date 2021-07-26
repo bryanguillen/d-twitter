@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import CreatePostForm from '../../components/create-post-form/CreatePostForm';
+import Post from '../../components/post/Post';
 import './Home.css';
 
 export default function Home({
@@ -9,12 +10,12 @@ export default function Home({
 }) {
   const [idForLastPostSeen, setIdForLastPostSeen] = useState(-1);
   const [postForm, setPostForm] = useState({ value: '', error: false });
+  const [feed, setFeed] = useState([]);
 
   useEffect(() => {
     (async function() {
       setupNewPostListener();
-      const posts = await getPosts();
-      console.log(posts);
+      setFeed(await getPosts());
     })();
   }, []);
 
@@ -96,6 +97,17 @@ export default function Home({
           onSubmit={(event) => onSubmit(event)}
         /> : 
         null
+      }
+      {
+        feed.map(post => (
+          <Post
+            numLikes={0}
+            postLiked={false}
+            text={post.value}
+            userImageUrl={'https://d-twitter.s3.us-east-2.amazonaws.com/default-profile-pic.jpg'}
+            username={post.username}
+          />
+        ))
       }
     </div>
   );
