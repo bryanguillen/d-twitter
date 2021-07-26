@@ -46,6 +46,11 @@ contract DecentralizedTwitter {
     bool exists
   );
 
+  event PostCreated(
+    int postId,
+    uint userId
+  );
+
   /******************************
    * Methods
    ******************************/
@@ -55,6 +60,7 @@ contract DecentralizedTwitter {
     require(users[sender].exists && users[sender].userId == userId);
     Post memory newPost = Post(postId, userId);
     posts.push(newPost);
+    emit PostCreated(postId, userId);
   }
 
   function createUser(uint userId) public {
