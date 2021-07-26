@@ -7,10 +7,15 @@ export default function Home({
   stores,
   decentralizedTwitterContract
 }) {
+  const [idForLastPostSeen, setIdForLastPostSeen] = useState(-1);
   const [postForm, setPostForm] = useState({ value: '', error: false });
 
   useEffect(() => {
-    setupNewPostListener();
+    (async function() {
+      setupNewPostListener();
+      const posts = await getPosts();
+      console.log(posts);
+    })();
   }, []);
 
   /**
@@ -22,6 +27,17 @@ export default function Home({
     const { post } = stores;
     const posts = await post.get('');
     return posts.length > 0 ? posts[posts.length - 1]._id + 1 : 1;
+  }
+
+  /**
+   * @description Function used for getting the posts for page
+   * @returns {Array<Object>}
+   */
+  async function getPosts() {
+    const { post } = stores;
+    const postMetadata = await decentralizedTwitterContract.methods.getRecentPosts(idForLastPostSeen).call();
+    const postIds = postMetadata.postIds.map(id => parseInt(id));
+    return await post.query(doc => postIds.includes(parseInt(doc._id)));
   }
 
   /**
