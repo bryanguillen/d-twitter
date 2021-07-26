@@ -10,6 +10,7 @@ import Home from './pages/home/Home';
 import initializeAppStores from './utils/initialize-app-stores';
 import Loading from './pages/loading/Loading';
 import NavigationBar from './components/navigation-bar/NavigationBar';
+import Profile from './pages/profile/Profile';
 import './App.css';
 
 function App() {
@@ -106,6 +107,12 @@ function App() {
         {
           web3 && stores.initialized && decentralizedTwitterContract ?
             <Switch>
+              <Route path="/profile/:userId">
+                <Profile
+                  decentralizedTwitterContract={decentralizedTwitterContract}
+                  stores={stores}
+                />
+              </Route>
               <Route path="/">
                 <Home
                   account={account}
