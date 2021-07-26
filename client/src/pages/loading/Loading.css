@@ -1,4 +1,5 @@
 .loading {
-  background-color: white;
+  background-color: transparent;
+  color: white;
   padding: 10px;
 }
