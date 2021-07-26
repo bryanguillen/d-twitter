@@ -34,10 +34,14 @@ export default function Home({
    * @returns {Array<Object>}
    */
   async function getPosts() {
-    const { post } = stores;
+    const { post, user } = stores;
     const postMetadata = await decentralizedTwitterContract.methods.getRecentPosts(idForLastPostSeen).call();
     const postIds = postMetadata.postIds.map(id => parseInt(id));
-    return await post.query(doc => postIds.includes(parseInt(doc._id)));
+    const userIds = postMetadata.userIds.map(id => parseInt(id));
+    const userData = await user.query(doc => userIds.includes(parseInt(doc._id)));
+    const postData = await post.query(doc => postIds.includes(parseInt(doc._id)));
+    const getUserData = (userId) => userData.find(user => parseInt(user._id) === userId);
+    return postData.map((post) => ({ ...post, ...getUserData(parseInt(post.userId)) }));
   }
 
   /**
