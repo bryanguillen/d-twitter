@@ -42,7 +42,7 @@ export default function Home({
     const userData = await user.query(doc => userIds.includes(parseInt(doc._id)));
     const postData = await post.query(doc => postIds.includes(parseInt(doc._id)));
     const getUserData = (userId) => userData.find(user => parseInt(user._id) === userId);
-    return postData.map((post) => ({ ...post, ...getUserData(parseInt(post.userId)) }));
+    return postData.map((post) => ({ ...post, ...getUserData(parseInt(post.userId)) })).reverse(); // needed to ensure order?
   }
 
   /**
