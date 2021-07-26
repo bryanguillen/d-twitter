@@ -15,7 +15,7 @@ function App() {
   const [web3, setWeb3] = useState(null);
 
   /**
-   * @description Used to initialize applciation
+   * @description Used to initialize application
    */
   useEffect(() => {
     (async function() {
