@@ -86,37 +86,24 @@ describe("DecentralizedTwitter", () => {
     });
   });
 
-  contract("getRecentPosts", (accounts) => {
+  contract("getPosts", (accounts) => {
     let decentralizedTwitter;
     
     before(async () => {
       decentralizedTwitter = await DecentralizedTwitter.deployed();
       await decentralizedTwitter.createUser(0);
-      await createPosts(decentralizedTwitter, 25, 0);
+      await createPosts(decentralizedTwitter, 10, 0);
     });
     
-    it("should get the newest ten posts if no posts seen previously", async () => {
-      const results = await decentralizedTwitter.getRecentPosts(-1);
-      const postIds = results.postIds.map(postId => parseInt(postId.toString()));
-      const userIds = results.userIds.map(userId => parseInt(userId.toString()));
+    it("should get the id for all the posts in the db", async () => {
+      const results = await decentralizedTwitter.getPosts();
+      const postIds = results.map(postId => parseInt(postId.toString()));
       assert.equal(postIds.length, 10);
-      assert.equal(userIds.length, 10);
-      assert.deepEqual(postIds, [24, 23, 22, 21, 20, 19, 18, 17, 16, 15]);
-      assert.deepEqual(userIds, Array.from({ length: 10 }, () => 0));
-    });
-
-    it("should be able to handle use case where less than 10 and not starting from beginning", async () => {
-      const results = await decentralizedTwitter.getRecentPosts(5);
-      const postIds = results.postIds.map(postId => parseInt(postId.toString()));
-      const userIds = results.userIds.map(userId => parseInt(userId.toString()));
-      assert.equal(postIds.length, 5);
-      assert.equal(userIds.length, 5);
-      assert.deepEqual(postIds, [4, 3, 2, 1, 0]);
-      assert.deepEqual(userIds, [0, 0, 0, 0, 0]);
+      assert.deepEqual(postIds, [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
     });
   });
 
-  contract("getRecentPostsForUser", (accounts) => {
+  contract("getPostsForUser", (accounts) => {
     let decentralizedTwitter;
     
     before(async () => {
@@ -134,8 +121,8 @@ describe("DecentralizedTwitter", () => {
     });
     
     it("should get the newest posts for user", async () => {
-      const results = await decentralizedTwitter.getRecentPostsForUser(-1, 1);
-      const postIds = results.postIds.map(postId => parseInt(postId.toString()));
+      const results = await decentralizedTwitter.getPostsForUser(1);
+      const postIds = results.map(postId => parseInt(postId.toString()));
       assert.equal(postIds.length, 3);
       assert.deepEqual(postIds, [8, 6, 5]);
     });
