@@ -97,7 +97,7 @@ describe("DecentralizedTwitter", () => {
     
     it("should get the id for all the posts in the db", async () => {
       const results = await decentralizedTwitter.getPosts();
-      const postIds = results.map(postId => parseInt(postId.toString()));
+      const postIds = results.postIds.map(postId => parseInt(postId.toString()));
       assert.equal(postIds.length, 10);
       assert.deepEqual(postIds, [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
     });
