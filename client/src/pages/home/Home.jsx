@@ -53,10 +53,10 @@ export default function Home({
     // prevent submission
     event.preventDefault();
 
-    // validate
-    const { error, value } = postForm;
-
-    if (!error) {
+    const { value } = postForm;
+    const formCanBeSubmitted = value.trim().length > 0;
+    
+    if (formCanBeSubmitted) {
       // get relevant store
       const { post } = stores;
 
@@ -75,6 +75,8 @@ export default function Home({
     
       // reset postForm
       setPostForm({ value: '', error: false });
+    } else {
+      setPostForm(previousState => ({ ...previousState, error: true }));
     }
     
   }
