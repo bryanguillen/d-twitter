@@ -120,7 +120,7 @@ contract DecentralizedTwitter {
       /**
        * Handle both use cases -- user profile and home
        */
-      if (feedIsHome || posts[i].userId == userId) {
+      if (shouldIncludePostInFeed(feedIsHome, i, userId)) {
         numberOfPosts = numberOfPosts + 1;
       }
     }
@@ -133,16 +133,23 @@ contract DecentralizedTwitter {
     postIds = new int[](numberOfPosts);
 
     for (uint i = posts.length - 1; i != 0; i--) {
-      if (feedIsHome == true || posts[i].userId == userId) {
+      if (shouldIncludePostInFeed(feedIsHome, i, userId)) {
         postIds[counter] = posts[i].postId;
         counter = counter + 1;
-        // HACK
-        if (i == 1 && (feedIsHome == true || posts[0].userId == userId)) {
-          postIds[counter] = posts[0].postId;
-        }
       }
     }
 
+    /**
+     * HACK: Used to check first index, since it is not checked above
+     */
+    if (shouldIncludePostInFeed(feedIsHome, 0, userId)) {
+      postIds[counter] = posts[0].postId;
+    }
+
     return postIds;
+  }
+
+  function shouldIncludePostInFeed(bool feedIsHome, uint postIndex, uint userId) private view returns (bool include) {
+    include = feedIsHome == true || posts[postIndex].userId == userId;
   }
 }
