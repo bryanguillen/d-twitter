@@ -113,7 +113,7 @@ contract DecentralizedTwitter {
     }
   }
 
-  function getNumberOfPostsForUser(uint indexForPost, bool feedIsHome, uint userId) private view returns (uint numberOfPosts) {
+  function getNumberOfPosts(uint indexForPost, bool feedIsHome, uint userId) private view returns (uint numberOfPosts) {
     numberOfPosts = 0;
     uint i = indexForPost;
 
@@ -136,7 +136,7 @@ contract DecentralizedTwitter {
     require(posts.length > 0);
     
     uint index = findIndexForPost(idForLastPostSeen);
-    uint numberOfPosts = getNumberOfPostsForUser(index, feedIsHome, userId); // used to get the length for the memory arrays =(
+    uint numberOfPosts = getNumberOfPosts(index, feedIsHome, userId); // used to get the length for the memory arrays =(
 
     uint counter = 0; // 0 based for index purposes
     postIds = new int[](numberOfPosts);
