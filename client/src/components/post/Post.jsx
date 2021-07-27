@@ -18,7 +18,7 @@ export default function Post({
     <div className="post">
       <div className="post-content-container">
         <div className="post-profile-image-container">
-          <ProfileImage url={userImageUrl}/>
+          <div className="profile-image" style={{ backgroundImage: `url("${userImageUrl}")` }}></div>
         </div>
         <div className="post-username-and-content-container">
           <div className="post-username" onClick={() => history.push(`/profile/${userId}`)}>{username}</div>
