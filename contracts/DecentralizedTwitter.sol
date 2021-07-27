@@ -71,12 +71,12 @@ contract DecentralizedTwitter {
     emit UserCreated(userId, sender, true);
   }
 
-  function getRecentPosts(int idForLastPostSeen) public view returns (int[] memory postIds, uint[] memory userIds) {
-    (postIds, userIds) = getPostsForFeed(idForLastPostSeen, true, 0);
+  function getPosts() public view returns (int[] memory postIds) {
+    postIds = getPostsForFeed(true, 0);
   }
 
-  function getRecentPostsForUser(int idForLastPostSeen, uint userId) public view returns (int[] memory postIds, uint[] memory userIds) {
-    (postIds, userIds) = getPostsForFeed(idForLastPostSeen, false, userId);
+  function getPostsForUser(uint userId) public view returns (int[] memory postIds) {
+    postIds = getPostsForFeed(false, userId);
   }
 
   function getPost(int idForPostBeingSearched) public view returns (int postId, uint userId) {
@@ -113,57 +113,36 @@ contract DecentralizedTwitter {
     }
   }
 
-  function getNumberOfPosts(uint indexForPost, bool feedIsHome, uint userId) private view returns (uint numberOfPosts) {
+  function getNumberOfPosts(bool feedIsHome, uint userId) private view returns (uint numberOfPosts) {
     numberOfPosts = 0;
-    uint i = indexForPost;
 
-    while (numberOfPosts < 10) {
-      if (feedIsHome == true || posts[i].userId == userId) {
+    for (uint i = 0; i < posts.length; i++) {
+      /**
+       * Handle both use cases -- user profile and home
+       */
+      if (feedIsHome || posts[i].userId == userId) {
         numberOfPosts = numberOfPosts + 1;
       }
-      i = i - 1;
-      if (i == 0) {
-        if (feedIsHome == true || posts[i].userId == userId) {
-          numberOfPosts = numberOfPosts + 1;
-        }
-        break;
-      }
     }
-  } 
+  }
 
-  function getPostsForFeed(int idForLastPostSeen, bool feedIsHome, uint userId) private view returns (int[] memory postIds, uint[] memory userIds) {
-    // only run this if there are posts; hack for when there are no posts in the db
-    require(posts.length > 0);
-    
-    uint index = findIndexForPost(idForLastPostSeen);
-    uint numberOfPosts = getNumberOfPosts(index, feedIsHome, userId); // used to get the length for the memory arrays =(
+  function getPostsForFeed(bool feedIsHome, uint userId) private view returns (int[] memory postIds) {
+    uint numberOfPosts = getNumberOfPosts(feedIsHome, userId);
+    uint counter = 0; // used for constructing array backwards, since push cannot be used; 0 based for index purposes
 
-    uint counter = 0; // 0 based for index purposes
     postIds = new int[](numberOfPosts);
-    userIds = new uint[](numberOfPosts);
 
-    /**
-     * Run loop until the number of posts gotten is 10 or
-     * until we reach the "genisis" post
-     */
-    while (counter < 10) {
-      if (feedIsHome == true || posts[index].userId == userId) {
-        postIds[counter] = posts[index].postId;
-        userIds[counter] = posts[index].userId;
+    for (uint i = posts.length - 1; i != 0; i--) {
+      if (feedIsHome == true || posts[i].userId == userId) {
+        postIds[counter] = posts[i].postId;
         counter = counter + 1;
-      }
-      index = index - 1;
-      if (index == 0) {
-        postIds[counter] = posts[index].postId; // HACK
-        userIds[counter] = posts[index].userId; // HACK
-        break;
-      }
-      // hack for the specific user use case
-      if (counter == numberOfPosts) {
-        break;
+        // HACK
+        if (i == 1 && (feedIsHome == true || posts[0].userId == userId)) {
+          postIds[counter] = posts[0].postId;
+        }
       }
     }
 
-    return (postIds, userIds);
+    return postIds;
   }
 }
