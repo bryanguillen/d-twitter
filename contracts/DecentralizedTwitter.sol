@@ -1,8 +1,12 @@
 pragma solidity >=0.4.22 <0.6.0;
 
 /**
- * TODO Handle case where post id already exists for creating post
- * TODO Handle case where user id already exists for creating user
+ * Contract responsible for the encapsulating
+ * the primitive implementation of what a decentralized twitter
+ * would look like.  At a high level, this involves creating
+ * new metadata entries (i.e. users and posts) and getting said metadata.
+ * Notice, metadata is used here, as only reference values are stored
+ * on the blockchain, while the actual content is stored on IPFS.
  */
 contract DecentralizedTwitter {
   /******************************
@@ -100,6 +104,10 @@ contract DecentralizedTwitter {
    * Helpers
    ******************************/
 
+  /**
+   * Useful function for telling the main private method below,
+   * which returns a dynamically length array, how many posts to expect.
+   */
   function getNumberOfPosts(bool feedIsHome, uint userId) private view returns (uint numberOfPosts) {
     numberOfPosts = 0;
 
@@ -110,6 +118,13 @@ contract DecentralizedTwitter {
     }
   }
 
+  /**
+   * Interesting function reused for both home and profile views.
+   * It's responsible for getting all of the relevant post ids for a given feed,
+   * which again, can be profile or home feed.  Notice, it's interesting b/c
+   * the array is constructed in such a way that the newest posts need to be in
+   * the front of the array.  Thus, to do so, a backwards loop is used.
+   */
   function getPostsForFeed(bool feedIsHome, uint userId) private view returns (int[] memory postIds) {
     uint numberOfPosts = getNumberOfPosts(feedIsHome, userId);
     uint counter = 0; // used for constructing array backwards, since push cannot be used; 0 based for index purposes
@@ -133,6 +148,11 @@ contract DecentralizedTwitter {
     return postIds;
   }
 
+  /**
+   * Used to encapsulate the simple logic that is reused in multiple
+   * other private methods; it's also used to help provide context around
+   * what is happening in private functions above.
+   */
   function shouldIncludePostInFeed(bool feedIsHome, uint postIndex, uint userId) private view returns (bool include) {
     include = feedIsHome == true || posts[postIndex].userId == userId;
   }
