@@ -17,7 +17,6 @@ function App() {
   const [account, setAccount] = useState({ address: '', id: -1 });
   const [decentralizedTwitterContract, setDecentralizedTwitterContract] = useState(null);
   const [stores, setStores] = useState({ user: null, post: null, initialized: false });
-  const [userExistsInSystem, setUserExistsInSystem] = useState(false);
   const [web3, setWeb3] = useState(null);
 
   /**
@@ -53,20 +52,21 @@ function App() {
    */
   useEffect(() => {
     (async function() {
-      if (account.address && decentralizedTwitterContract && stores.initialized && !userExistsInSystem) {
-        const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call({ from: account.address });
+      const { address } = account;
+      if (address && decentralizedTwitterContract && stores.initialized) {
+        const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call({ from: address });
         if (userOnBlockchain.exists) {
           setAccount(previousState => ({...previousState, id: userOnBlockchain.userId}));
         } else {
           const userId = await getNewUserId();
           setupUserCreatedListener();
-          await stores.user.put({ _id: userId, username: account });
-          await decentralizedTwitterContract.methods.createUser(userId).send({ from: account.address });
+          await stores.user.put({ _id: userId, username: address });
+          await decentralizedTwitterContract.methods.createUser(userId).send({ from: address });
           setAccount(previousState => ({...previousState, id: userId}))
         }
       }
     })();
-  }, [account, decentralizedTwitterContract, userExistsInSystem, stores]);
+  }, [account, decentralizedTwitterContract, stores]);
 
   /**
    * @description Abstraction for connecting user to application
