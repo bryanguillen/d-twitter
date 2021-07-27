@@ -13,7 +13,6 @@ const Template = (args) => {
   return (
     <NavigationBar
       handleClickOnConnect={() => setLoggedIn(true)}
-      handleClickOnHome={args.handleClickOnHome}
       loggedIn={loggedIn}
     />
   );
@@ -21,6 +20,6 @@ const Template = (args) => {
 
 export const NavigationBarStory = Template.bind({});
 NavigationBarStory.args = {
-  handleClickOnHome: undefined,
+  handleClickOnConnect: undefined,
   loggedIn: false
 };
