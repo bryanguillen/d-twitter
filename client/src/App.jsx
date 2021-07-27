@@ -54,7 +54,7 @@ function App() {
     await window.ethereum.send('eth_requestAccounts');
     const { web3 } = appDependencies;
     const [address] = await web3.eth.getAccounts();
-    setAccount(previousState => ({...previousState, address}));
+    await updateAccount(address);
   }
 
   /**
