@@ -1,6 +1,4 @@
 import PropTypes from 'prop-types';
-import { IconContext } from 'react-icons';
-import { IoHeartOutline, IoHeartSharp } from 'react-icons/io5';
 import { useHistory } from 'react-router-dom';
 import ProfileImage from '../profile-image/ProfileImage';
 import './Post.css';
@@ -9,8 +7,6 @@ import './Post.css';
  * UI Component for post
  */
 export default function Post({
-  numLikes,
-  postLiked,
   text,
   userId,
   userImageUrl,
@@ -31,19 +27,12 @@ export default function Post({
           </div>
         </div>
       </div>
-      <div className="post-like-button-container">
-        <IconContext.Provider value={{ size: '2rem', color: 'red' }}>
-          {postLiked ? <IoHeartSharp className="post-like-button"/> : <IoHeartOutline className="post-like-button"/>}
-        </IconContext.Provider>
-        <div className="post-num-likes">{numLikes}</div>
-      </div>
     </div>
   )
 }
 
 Post.propTypes = {
   imageUrl: PropTypes.string,
-  numLikes: PropTypes.number,
   text: PropTypes.string,
   userImageUrl: PropTypes.string,
   username: PropTypes.string
