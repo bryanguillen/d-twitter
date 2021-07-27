@@ -74,7 +74,7 @@ export default function Home({
       await decentralizedTwitterContract.methods.createPost(postId, parsedId).send({ from: address });
     
       // reset postForm
-      setPostForm({ value: '', file: null, error: false });
+      setPostForm({ value: '', error: false });
     }
     
   }
