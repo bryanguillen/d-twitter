@@ -10,7 +10,7 @@ export default function Post({
   text,
   userId,
   userImageUrl,
-  username,
+  username
 }) {
   const history = useHistory(); // this should be moved to parent
 
