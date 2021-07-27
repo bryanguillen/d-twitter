@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import ProfileImage from '../profile-image/ProfileImage';
 import './Post.css';
 
 /**
