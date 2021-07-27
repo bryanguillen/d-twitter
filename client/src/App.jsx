@@ -32,7 +32,7 @@ function App() {
   }, []);
 
   /**
-   * @description Function used to create an account, if none exists
+   * @description Function used to setup account data if it exists
    */
   useEffect(() => {
     (async function() {
