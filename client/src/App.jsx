@@ -101,7 +101,6 @@ function App() {
       <div className="app">
         <NavigationBar
           handleClickOnConnect={connect}
-          handleClickOnHome={undefined}
           loggedIn={account.address}
         />
         {
