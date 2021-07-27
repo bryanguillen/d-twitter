@@ -40,17 +40,7 @@ function App() {
       if (initialized) {
         const [address] = await web3.eth.getAccounts();
         if (address) {
-          const { decentralizedTwitterContract, stores } = appDependencies;
-          const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call({ from: address });
-          if (userOnBlockchain.exists) {
-            setAccount(() => ({ address, id: userOnBlockchain.userId}));
-          } else {
-            const userId = await getNewUserId();
-            setupUserCreatedListener();
-            await stores.user.put({ _id: userId, username: address });
-            await decentralizedTwitterContract.methods.createUser(userId).send({ from: address });
-            setAccount(previousState => ({...previousState, id: userId}))
-          }
+          await updateAccount(address);
         }
       }
     })();
@@ -99,6 +89,25 @@ function App() {
   function setupUserCreatedListener() {
     const { decentralizedTwitterContract } = appDependencies;
     decentralizedTwitterContract.events.UserCreated({}, () => console.log('user created'));
+  }
+
+  /**
+   * @description Wrapper for updating (i.e. setting the account state)
+   * @param {String} address
+   */
+  async function updateAccount(address) {
+    const { decentralizedTwitterContract, stores } = appDependencies;
+    const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call({ from: address });
+
+    if (userOnBlockchain.exists) {
+      setAccount(() => ({ address, id: userOnBlockchain.userId}));
+    } else {
+      const userId = await getNewUserId();
+      setupUserCreatedListener();
+      await stores.user.put({ _id: userId, username: address });
+      await decentralizedTwitterContract.methods.createUser(userId).send({ from: address });
+      setAccount(() => ({ address, id: userId }))
+    }
   }
 
   return (
