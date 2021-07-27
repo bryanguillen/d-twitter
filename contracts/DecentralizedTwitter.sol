@@ -75,12 +75,12 @@ contract DecentralizedTwitter {
     emit UserCreated(userId, sender, true);
   }
 
-  function getPosts() public view returns (int[] memory postIds) {
-    postIds = getPostsForFeed(true, 0);
+  function getPosts() public view returns (int[] memory postIds, uint[] memory userIds) {
+    (postIds, userIds) = getPostsForFeed(true, 0);
   }
 
   function getPostsForUser(uint userId) public view returns (int[] memory postIds) {
-    postIds = getPostsForFeed(false, userId);
+    (postIds, ) = getPostsForFeed(false, userId);
   }
 
   function getPost(int idForPostBeingSearched) public view returns (int postId, uint userId) {
@@ -125,15 +125,17 @@ contract DecentralizedTwitter {
    * the array is constructed in such a way that the newest posts need to be in
    * the front of the array.  Thus, to do so, a backwards loop is used.
    */
-  function getPostsForFeed(bool feedIsHome, uint userId) private view returns (int[] memory postIds) {
+  function getPostsForFeed(bool feedIsHome, uint userId) private view returns (int[] memory postIds, uint[] memory userIds) {
     uint numberOfPosts = getNumberOfPosts(feedIsHome, userId);
     uint counter = 0; // used for constructing array backwards, since push cannot be used; 0 based for index purposes
 
     postIds = new int[](numberOfPosts);
+    userIds = new uint[](numberOfPosts);
 
     for (uint i = posts.length - 1; i != 0; i--) {
       if (shouldIncludePostInFeed(feedIsHome, i, userId)) {
         postIds[counter] = posts[i].postId;
+        userIds[counter] = posts[i].userId;
         counter = counter + 1;
       }
     }
@@ -143,9 +145,10 @@ contract DecentralizedTwitter {
      */
     if (shouldIncludePostInFeed(feedIsHome, 0, userId)) {
       postIds[counter] = posts[0].postId;
+      userIds[counter] = posts[0].userId;
     }
 
-    return postIds;
+    return (postIds, userIds);
   }
 
   /**
