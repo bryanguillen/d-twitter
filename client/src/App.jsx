@@ -15,9 +15,7 @@ import './App.css';
 
 function App() {
   const [account, setAccount] = useState({ address: '', id: -1 });
-  const [decentralizedTwitterContract, setDecentralizedTwitterContract] = useState(null);
-  const [stores, setStores] = useState({ user: null, post: null, initialized: false });
-  const [web3, setWeb3] = useState(null);
+  const [appDependencies, setAppDependencies] = useState({ initialized: false, decentralizedTwitterContract: null, stores: null, web3: null });
 
   /**
    * @description Used to initialize application; NOTE: THIS ASSUMES USER
@@ -26,21 +24,7 @@ function App() {
   useEffect(() => {
     (async function() {
       try {
-        const { post, user } = await initializeAppStores('http://localhost:5002');
-        setStores({ post, user, initialized: true });
-
-        const web3 = await getWeb3();
-        setWeb3(web3);
-
-        const networkId = await web3.eth.net.getId();
-        const networkData = DecentralizedTwitter.networks[networkId];
-        const dTwitter = new web3.eth.Contract(DecentralizedTwitter.abi, networkData.address)
-        setDecentralizedTwitterContract(dTwitter);
-
-        const [address] = await web3.eth.getAccounts();
-        if (address) {
-          setAccount(previousState => ({ ...previousState, address }));
-        }
+        setAppDependencies(await getAppDependencies());
       } catch (error) {
         console.log(error);
       }
@@ -52,21 +36,25 @@ function App() {
    */
   useEffect(() => {
     (async function() {
-      const { address } = account;
-      if (address && decentralizedTwitterContract && stores.initialized) {
-        const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call({ from: address });
-        if (userOnBlockchain.exists) {
-          setAccount(previousState => ({...previousState, id: userOnBlockchain.userId}));
-        } else {
-          const userId = await getNewUserId();
-          setupUserCreatedListener();
-          await stores.user.put({ _id: userId, username: address });
-          await decentralizedTwitterContract.methods.createUser(userId).send({ from: address });
-          setAccount(previousState => ({...previousState, id: userId}))
+      const { initialized, web3 } = appDependencies;
+      if (initialized) {
+        const [address] = await web3.eth.getAccounts();
+        if (address) {
+          const { decentralizedTwitterContract, stores } = appDependencies;
+          const userOnBlockchain = await decentralizedTwitterContract.methods.getUser().call({ from: address });
+          if (userOnBlockchain.exists) {
+            setAccount(() => ({ address, id: userOnBlockchain.userId}));
+          } else {
+            const userId = await getNewUserId();
+            setupUserCreatedListener();
+            await stores.user.put({ _id: userId, username: address });
+            await decentralizedTwitterContract.methods.createUser(userId).send({ from: address });
+            setAccount(previousState => ({...previousState, id: userId}))
+          }
         }
       }
     })();
-  }, [account, decentralizedTwitterContract, stores]);
+  }, [appDependencies]);
 
   /**
    * @description Abstraction for connecting user to application
@@ -74,8 +62,24 @@ function App() {
    */
   async function connect() {
     await window.ethereum.send('eth_requestAccounts');
+    const { web3 } = appDependencies;
     const [address] = await web3.eth.getAccounts();
     setAccount(previousState => ({...previousState, address}));
+  }
+
+  /**
+   * @description Abstraction for getting all of the dependencies needed before
+   * starting app
+   * @returns {Object}
+   */
+  async function getAppDependencies() {
+    const { post, user } = await initializeAppStores('http://localhost:5002');
+    const web3 = await getWeb3();
+    const networkId = await web3.eth.net.getId();
+    const networkData = DecentralizedTwitter.networks[networkId];
+    const dTwitter = new web3.eth.Contract(DecentralizedTwitter.abi, networkData.address)
+    
+    return { initialized: true, web3, decentralizedTwitterContract: dTwitter, stores: { post, user } };
   }
 
   /**
@@ -83,7 +87,7 @@ function App() {
    * @returns {Object}
    */
   async function getNewUserId() {
-    const { user } = stores;
+    const { user } = appDependencies.stores;
     const users = await user.get('');
     return users.length > 0 ? users[users.length - 1]._id + 1 : 1;
   }
@@ -93,6 +97,7 @@ function App() {
    * @returns {undefined}
    */
   function setupUserCreatedListener() {
+    const { decentralizedTwitterContract } = appDependencies;
     decentralizedTwitterContract.events.UserCreated({}, () => console.log('user created'));
   }
 
@@ -104,19 +109,19 @@ function App() {
           loggedIn={account.address}
         />
         {
-          web3 && stores.initialized && decentralizedTwitterContract ?
+          appDependencies.initialized ?
             <Switch>
               <Route path="/profile/:userId">
                 <Profile
-                  decentralizedTwitterContract={decentralizedTwitterContract}
-                  stores={stores}
+                  decentralizedTwitterContract={appDependencies.decentralizedTwitterContract}
+                  stores={appDependencies.stores}
                 />
               </Route>
               <Route path="/">
                 <Home
                   account={account}
-                  decentralizedTwitterContract={decentralizedTwitterContract}
-                  stores={stores}
+                  decentralizedTwitterContract={appDependencies.decentralizedTwitterContract}
+                  stores={appDependencies.stores}
                 />
               </Route>
             </Switch> :
