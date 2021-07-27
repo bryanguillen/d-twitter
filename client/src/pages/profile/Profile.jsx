@@ -23,7 +23,7 @@ export default function Profile({
    */
   async function getPosts() {
     const { post, user } = stores;
-    const postMetadata = await decentralizedTwitterContract.methods.getRecentPostsForUser(-1, 7).call();
+    const postMetadata = await decentralizedTwitterContract.methods.getPostsForUser(userId).call();
     const postIds = postMetadata.postIds.map(id => parseInt(id));
     const [userData] = await user.query(doc => doc._id == userId); // HACK: Unsure of type
     const postData = await post.query(doc => postIds.includes(parseInt(doc._id)));

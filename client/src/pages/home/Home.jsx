@@ -35,7 +35,7 @@ export default function Home({
    */
   async function getPosts() {
     const { post, user } = stores;
-    const postMetadata = await decentralizedTwitterContract.methods.getRecentPosts(-1).call();
+    const postMetadata = await decentralizedTwitterContract.methods.getPosts().call();
     const postIds = postMetadata.postIds.map(id => parseInt(id));
     const userIds = postMetadata.userIds.map(id => parseInt(id));
     const userData = await user.query(doc => userIds.includes(parseInt(doc._id)));
