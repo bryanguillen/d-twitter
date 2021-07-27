@@ -46,6 +46,23 @@ export default function Home({
   }
 
   /**
+   * @description on change handler for form
+   * @param {Object} event
+   */
+  function onChange(event) {
+    const { value } = event.target;
+    const { error } = postForm;
+    /**
+     * NOTE: For error, the logic simply says, "if it is true
+     * and the value is still empty, then leave error, otherwise
+     * takeaway error".  This is useful for when the user submits
+     * empty form, so that the error can disappear once the user
+     * starts typing, thus, providing quicker feedback.
+     */
+    setPostForm({ value, error: error && value.trim().length === 0 });
+  }
+
+  /**
    * @description on submit handler for creat post form
    * @param {Object} event
    */
@@ -94,9 +111,8 @@ export default function Home({
         <CreatePostForm
           error={postForm.error}
           value={postForm.value}
-          onChangeFileInput={event => event.target.files.length === 1 ? setPostForm(previousState => ({ ...previousState, file: event.target.files[0] })) : undefined}
-          onChangeTextInput={event => setPostForm(previousState => ({ ...previousState, value: event.target.value }))}
-          onSubmit={(event) => onSubmit(event)}
+          onChangeTextInput={onChange}
+          onSubmit={onSubmit}
         /> : 
         null
       }
