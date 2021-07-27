@@ -100,26 +100,10 @@ contract DecentralizedTwitter {
    * Helpers
    ******************************/
 
-  function findIndexForPost(int idForLastPostSeen) private view returns (uint index) {
-    if (idForLastPostSeen == -1) {
-      index = posts.length - 1;
-    } else {
-      for (uint i = 0; i < posts.length; i++) {
-        if (idForLastPostSeen == posts[i].postId) {
-          index = i - 1;
-          break;
-        }
-      }
-    }
-  }
-
   function getNumberOfPosts(bool feedIsHome, uint userId) private view returns (uint numberOfPosts) {
     numberOfPosts = 0;
 
     for (uint i = 0; i < posts.length; i++) {
-      /**
-       * Handle both use cases -- user profile and home
-       */
       if (shouldIncludePostInFeed(feedIsHome, i, userId)) {
         numberOfPosts = numberOfPosts + 1;
       }
