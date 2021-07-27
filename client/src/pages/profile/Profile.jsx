@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Post from '../../components/post/Post';
+import Feed from '../../components/feed/Feed';
 import './Profile.css';
 
 export default function Profile({
@@ -32,17 +32,7 @@ export default function Profile({
 
   return (
     <div className="profile">
-      {feed.map((post, index) => (
-        <Post
-          key={index}
-          numLikes={0}
-          postLiked={false}
-          text={post.value}
-          userId={post.userId}
-          userImageUrl={'https://d-twitter.s3.us-east-2.amazonaws.com/default-profile-pic.jpg'}
-          username={post.username}
-        />
-      ))}
+      <Feed posts={feed}/>
     </div>
   )
 }

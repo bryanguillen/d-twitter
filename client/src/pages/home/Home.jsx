@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import CreatePostForm from '../../components/create-post-form/CreatePostForm';
-import Post from '../../components/post/Post';
+import Feed from '../../components/feed/Feed';
 import './Home.css';
 
 export default function Home({
@@ -115,19 +115,7 @@ export default function Home({
         /> : 
         null
       }
-      {
-        feed.map((post, index) => (
-          <Post
-            key={index}
-            numLikes={0}
-            postLiked={false}
-            text={post.value}
-            userId={post.userId}
-            userImageUrl={'https://d-twitter.s3.us-east-2.amazonaws.com/default-profile-pic.jpg'}
-            username={post.username}
-          />
-        ))
-      }
+      <Feed posts={feed}/>
     </div>
   );
 }
